@@ -1,4 +1,4 @@
-# OS-Climate
+# os-climate/devops-common
 
 ## Shared DevOps tooling, including linting tools, GitHub Actions
 
@@ -8,4 +8,8 @@ Deployment is automated using a single GitHub workflow, defined in this file:
 
 [workflows/bootstrap.yaml](workflows/bootstrap.yaml)
 
-This runs weekly to ensure downstream repositories always hold the latest content.
+...and a complementary shell script location here:
+
+[scripts/bootstrap.sh](scripts/bootstrap.sh)
+
+The workflow runs weekly to ensure downstream repositories are regularly updated.
