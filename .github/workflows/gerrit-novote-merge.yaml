@@ -41,10 +41,10 @@ on:
         description: "Gerrit refspec of change"
         required: true
         type: string
-    secrets:
-      SONAR_TOKEN:
-        description: "Sonar Cloud access token"
-        required: true
+    # secrets:
+    #   SONAR_TOKEN:
+    #     description: "Sonar Cloud access token"
+    #     required: true
 
 concurrency:
   # yamllint disable-line rule:line-length
