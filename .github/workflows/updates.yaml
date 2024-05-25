@@ -40,8 +40,9 @@ jobs:
           PARALLEL_THREADS="1"
 
           AUTOMATION_BRANCH="update-workflows"
-          UPDATE_FILE=".github/workflows/update.txt"
-          EXCLUDE_FILE=".github/workflows/exclude.txt"
+          WORKFLOW_PATH=".github/workflows"
+          UPDATE_FILE="$WORKFLOW_PATH/update.txt"
+          IGNORE_FILE="$WORKFLOW_PATH/ignore.txt"
           HEAD_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           DATE=$(date '+%Y-%m-%d')
 
@@ -98,15 +99,20 @@ jobs:
           mapfile -t WORKFLOWS_ARRAY < <(ls .github/workflows | xargs basename)
 
           # Code path if no update/exclude files present
-          if [ ! -f "$UPDATE_FILE" ] && [ ! -f "$EXCLUDE_FILE" ]; then
-
+          if [ ! -f "$UPDATE_FILE" ] && [ ! -f "$IGNORE_FILE" ]; then
+            MODE="all"
           # Code path if update files is present
           elif [ -f "$UPDATE_FILE" ]; then
-
+            MODE="opt-in"
           # Code path if exclusion file is present
-          elif [ -f "$EXCLUDE_FILE" ]; then
-
+          elif [ -f "$IGNORE_FILE" ]; then
+            MODE="opt-out"
           fi
+
+          for WORKFLOW in "$WORKFLOW_PATH"/*.yaml; do
+            echo "Processing: $WORKFLOW"
+            scripts/update.py "$WORKFLOW"
+          done
 
           #SHELLCODEEND
 
@@ -157,7 +163,7 @@ jobs:
 
 
       - name: Create Pull Request
-        if: steps.update-repository.outputs.changed == 'true'
+        if: steps.update-commits.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         # env:
         #   GITHUB_TOKEN: ${{ github.token }}
@@ -166,8 +172,8 @@ jobs:
           token: ${{ secrets.ACTIONS_WORKFLOW }}
           commit-message: "Chore: Update DevOps tooling from central repository [skip ci]"
           signoff: "true"
-          base: ${{ steps.update-repository.outputs.headbranch }}
-          branch: ${{ steps.update-repository.outputs.branchname }}
+          base: ${{ steps.update-commits.outputs.headbranch }}
+          branch: ${{ steps.update-commits.outputs.branchname }}
           delete-branch: true
           title: "Chore: Update DevOps tooling from central repository [skip ci]"
           body: |
