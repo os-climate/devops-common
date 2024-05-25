@@ -41,10 +41,13 @@ on:
         description: "Gerrit refspec of change"
         required: true
         type: string
-    # secrets:
-    #   SONAR_TOKEN:
-    #     description: "Sonar Cloud access token"
-    #     required: true
+
+# Need to fix by removing in upstream repo:
+# https://github.com/actions/runner/issues/1858
+#    secrets:
+#      SONAR_TOKEN:
+#        description: "Sonar Cloud access token"
+#        required: true
 
 concurrency:
   # yamllint disable-line rule:line-length
