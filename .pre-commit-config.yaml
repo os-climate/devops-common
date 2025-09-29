@@ -131,7 +131,7 @@ repos:
         additional_dependencies: ["pytest", "types-requests"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1
+    rev: v0.13.2
     hooks:
       - id: ruff
         files: ^(scripts|tests|custom_components)/.+\.py$
